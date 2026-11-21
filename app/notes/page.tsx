@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Brain, Plus, Save, Search, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { Brain, Plus, Save, Search, Sparkles, Trash2 } from 'lucide-react';
 import { timeAgo } from '@/lib/dates';
 import { uid } from '@/lib/seed';
 import { useStore } from '@/lib/store';
@@ -54,10 +55,15 @@ export default function NotesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <div className="mb-1 text-xs font-bold uppercase tracking-[0.25em] text-mint">brain dump</div>
-        <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Quick Notes</h1>
-        <p className="muted mt-1 text-sm">Jo bhi yaad aaye — formula, PYQ, ya &quot;kal ye padhna hai&quot; — turant yahan likh do.</p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div className="mb-1 text-xs font-bold uppercase tracking-[0.25em] text-mint">brain dump</div>
+          <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Quick Notes</h1>
+          <p className="muted mt-1 text-sm">Jo bhi yaad aaye — formula, PYQ, ya &quot;kal ye padhna hai&quot; — turant yahan likh do.</p>
+        </div>
+        <Link href="/ai-notes" className="btn-violet">
+          <Sparkles size={15} /> AI se short notes
+        </Link>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[320px_1fr]">

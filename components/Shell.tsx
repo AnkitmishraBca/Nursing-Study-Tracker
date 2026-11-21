@@ -17,6 +17,7 @@ import {
   PieChart,
   Play,
   Settings2,
+  Sparkles,
   StickyNote,
   Volume2,
   X,
@@ -32,6 +33,7 @@ const NAV = [
   { href: '/calendar', label: 'Calendar', icon: CalendarDays },
   { href: '/progress', label: 'Progress', icon: PieChart },
   { href: '/notes', label: 'Brain Dump', icon: StickyNote },
+  { href: '/ai-notes', label: 'AI Notes', icon: Sparkles },
   { href: '/health', label: 'Health & Mood', icon: HeartPulse },
   { href: '/settings', label: 'Settings', icon: Settings2 },
 ];
@@ -212,7 +214,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
 
       <footer className="border-t border-white/[0.07] py-5 text-center">
         <span className="watermark text-2xl font-bold tracking-wide sm:text-3xl">Made by 💖 Ankit</span>
-        <div className="mt-1 text-[10px] uppercase tracking-[0.25em] text-slate-600">Phase 1 • study tracker</div>
+        <div className="mt-1 text-[10px] uppercase tracking-[0.25em] text-slate-600">Phase 2 • AI study tracker</div>
       </footer>
 
       <FocusOverlay />

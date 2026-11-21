@@ -171,5 +171,24 @@ export const mockTests = pgTable(
   (t) => [index('mock_tests_taken_idx').on(t.takenAt)],
 );
 
+/** Phase 2 — AI generated short notes library (saved history). */
+export const aiNotes = pgTable(
+  'ai_notes',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull().default('me'),
+    title: text('title').notNull(),
+    sourceText: text('source_text').notNull().default(''),
+    mode: text('mode').notNull().default('short-notes'),
+    language: text('language').notNull().default('en'),
+    provider: text('provider'),
+    model: text('model'),
+    content: text('content').notNull().default(''),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: now,
+  },
+  (t) => [index('ai_notes_created_idx').on(t.createdAt)],
+);
+
 export const subjectRelations = relations(subjects, ({ many }) => ({ topics: many(topics) }));
 export const topicRelations = relations(topics, ({ one }) => ({ subject: one(subjects, { fields: [topics.subjectId], references: [subjects.id] }) }));
