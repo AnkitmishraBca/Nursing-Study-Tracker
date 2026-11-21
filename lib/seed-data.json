@@ -1,0 +1,100 @@
+{
+  "subjects": [
+    {
+      "id": "sub-anat1", "code": "ANAT1", "name": "Anatomy & Physiology – I", "group": "backlog", "semester": 1, "icon": "🦴", "color": "#60a5fa",
+      "topics": ["Gross Anatomy: Upper Limb", "Thorax & Thoracic Wall", "Abdomen & Pelvis", "Lower Limb", "Histology Basics", "Bone & Joint Physiology"]
+    },
+    {
+      "id": "sub-nf1", "code": "NF1", "name": "Nursing Foundations – I", "group": "backlog", "semester": 1, "icon": "🩺", "color": "#34e0a1",
+      "topics": ["Nursing Profession & History", "Nursing Process", "Communication with Patient", "Infection Control & Asepsis", "Vitals & Measurements", "Personal Hygiene & Bed Making", "Admission & Discharge"]
+    },
+    {
+      "id": "sub-bio1", "code": "BIO1", "name": "Biochemistry", "group": "backlog", "semester": 1, "icon": "🧪", "color": "#f472b6",
+      "topics": ["Biomolecules", "Carbohydrate Metabolism", "Protein Metabolism", "Lipid Metabolism", "Enzymes & Coenzymes", "Vitamins & Minerals"]
+    },
+    {
+      "id": "sub-micro1", "code": "MICRO1", "name": "Microbiology", "group": "backlog", "semester": 1, "icon": "🦠", "color": "#a78bfa",
+      "topics": ["Microbial World & Classification", "Bacteriology Basics", "Virology & Mycology", "Parasitology Overview", "Sterilization & Disinfection", "Immunity Basics"]
+    },
+    {
+      "id": "sub-anat2", "code": "ANAT2", "name": "Anatomy & Physiology – II", "group": "backlog", "semester": 2, "icon": "🧠", "color": "#60a5fa",
+      "topics": ["Nervous System", "Cardiovascular System", "Respiratory System", "Digestive System", "Urinary System", "Endocrine System", "Reproductive System"]
+    },
+    {
+      "id": "sub-pharm1", "code": "PHARM1", "name": "Pharmacology – I", "group": "backlog", "semester": 2, "icon": "💊", "color": "#fbbf24",
+      "topics": ["General Pharmacology", "Drug Dosage & Calculation", "Autonomic Drugs", "CNS Depressants", "CNS Stimulants", "Analgesics & Antipyretics"]
+    },
+    {
+      "id": "sub-nf2", "code": "NF2", "name": "Nursing Foundations – II", "group": "backlog", "semester": 2, "icon": "🩹", "color": "#34e0a1",
+      "topics": ["Fluid & Electrolyte Balance", "Nutrition & Diet Therapy", "Elimination & Catheterization", "Oxygenation & Respiration", "Wound Care & Dressing", "Medication Administration", "Emergency Care Basics"]
+    },
+    {
+      "id": "sub-hec", "code": "HEC", "name": "Health Education & Communication", "group": "backlog", "semester": 2, "icon": "🗣️", "color": "#22d3ee",
+      "topics": ["Health Education Principles", "Communication Models", "Teaching Methods", "Group Dynamics", "Health Promotion & NHP", "Counselling Basics"]
+    },
+    {
+      "id": "sub-msn1", "code": "MSN1", "name": "Medical Surgical Nursing – I", "group": "backlog", "semester": 3, "icon": "🏥", "color": "#fb7185",
+      "topics": ["Pre & Post Operative Care", "Operating Room Nursing", "Surgical Asepsis", "Wound Healing & Complications", "Pain Management", "Fluid & Electrolyte Therapy", "Blood Transfusion"]
+    },
+    {
+      "id": "sub-path3", "code": "PATH3", "name": "Pathology & Genetics", "group": "backlog", "semester": 3, "icon": "🔬", "color": "#c084fc",
+      "topics": ["Cell Injury & Adaptation", "Inflammation & Repair", "Neoplasia", "Hematological Disorders", "Genetic Principles & Inheritance", "Common Lab Tests"]
+    },
+    {
+      "id": "sub-pharm2", "code": "PHARM2", "name": "Pharmacology – II", "group": "backlog", "semester": 3, "icon": "💉", "color": "#fbbf24",
+      "topics": ["Antimicrobials", "Antitubercular & Antifungal", "Cardiovascular Drugs", "Diuretics & Antihypertensives", "Antidiabetics", "Antiulcer & Antiemetics", "Vitamins & Blood Products"]
+    },
+    {
+      "id": "sub-chn1", "code": "CHN1", "name": "Community Health Nursing – I", "group": "backlog", "semester": 3, "icon": "🌍", "color": "#4ade80",
+      "topics": ["Community Health Concepts", "Primary Health Care", "Maternal & Child Health in Community", "Communicable Diseases", "National Health Programmes", "Biostatistics Basics", "Health Surveys"]
+    },
+    {
+      "id": "sub-msn2", "code": "MSN2", "name": "Medical Surgical Nursing – II", "group": "current", "semester": 4, "icon": "🩺", "color": "#fb7185",
+      "topics": ["Cardiovascular Disorders", "Respiratory Disorders", "Renal & Urinary Disorders", "GI & Hepatic Disorders", "Neurological Disorders", "Burns & Injuries", "Critical Care Nursing"]
+    },
+    {
+      "id": "sub-obg4", "code": "OBG4", "name": "Obstetrics & Gynaecology Nursing", "group": "current", "semester": 4, "icon": "🤰", "color": "#f472b6",
+      "topics": ["Antenatal Care", "Normal Labour & Delivery", "Postnatal Care", "Obstetric Emergencies", "Gynaecological Disorders", "Family Planning & Contraception"]
+    },
+    {
+      "id": "sub-child4", "code": "CHILD4", "name": "Child Health Nursing", "group": "current", "semester": 4, "icon": "🧒", "color": "#34e0a1",
+      "topics": ["Growth & Development", "Immunization Schedule", "Nutrition in Children", "Common Childhood Illnesses", "Neonatal Nursing", "Paediatric Emergencies", "School Health"]
+    },
+    {
+      "id": "sub-ment4", "code": "MENT4", "name": "Mental Health Nursing", "group": "current", "semester": 4, "icon": "🧠", "color": "#a78bfa",
+      "topics": ["Mental Health & Illness Overview", "Psychiatric Assessment", "Anxiety Disorders", "Mood Disorders", "Schizophrenia", "Therapeutic Communication", "Crisis Intervention"]
+    },
+    {
+      "id": "sub-nor-fund", "code": "NORFUND", "name": "NORCET – Nursing Fundamentals", "group": "norcet", "semester": 0, "icon": "⚡", "color": "#34e0a1",
+      "topics": ["Nursing Process & Care Plan", "Infection Prevention & Control", "Vitals & Emergency Care", "Medication Calculation Drills", "Fluid Balance & Transfusion", "Ethical & Legal Aspects"]
+    },
+    {
+      "id": "sub-nor-anat", "code": "NORANAT", "name": "NORCET – Anatomy & Physiology", "group": "norcet", "semester": 0, "icon": "🧠", "color": "#60a5fa",
+      "topics": ["Heart & Circulation", "Lungs & Respiration", "Brain & Nerves", "Kidney & Body Fluids", "GI & Liver", "Hormones & Reproduction"]
+    },
+    {
+      "id": "sub-nor-pharm", "code": "NORPHARM", "name": "NORCET – Pharmacology", "group": "norcet", "semester": 0, "icon": "💊", "color": "#fbbf24",
+      "topics": ["Drug Classes High Yield", "Cardiac & BP Drugs", "Antibiotics & Resistance", "Diabetes & Thyroid Drugs", "CNS & Analgesics", "Emergency Drugs", "Adverse Reactions"]
+    },
+    {
+      "id": "sub-nor-msn", "code": "NORMSN", "name": "NORCET – Medical Surgical", "group": "norcet", "semester": 0, "icon": "🏥", "color": "#fb7185",
+      "topics": ["MI & Hypertension Care", "COPD & Asthma Care", "Renal Failure & Dialysis", "GI Bleeding & Liver Failure", "Stroke & Seizure Care", "Burns & Shock", "Post-op Complications"]
+    },
+    {
+      "id": "sub-nor-obg", "code": "NOROBG", "name": "NORCET – Obstetrics & Gynaecology", "group": "norcet", "semester": 0, "icon": "🤰", "color": "#f472b6",
+      "topics": ["Antenatal Assessment", "Labour Stages & Monitoring", "PPH & Eclampsia", "Postnatal & Lactation", "Contraception", "Gynaec Emergencies"]
+    },
+    {
+      "id": "sub-nor-child", "code": "NORCHILD", "name": "NORCET – Child Health", "group": "norcet", "semester": 0, "icon": "🧒", "color": "#4ade80",
+      "topics": ["Immunization & Cold Chain", "Growth Charts & Milestones", "Diarrhoea & Dehydration", "Neonatal Resuscitation", "Respiratory Infections", "Nutrition & Anaemia"]
+    },
+    {
+      "id": "sub-nor-comm", "code": "NORCOMM", "name": "NORCET – Community & Research", "group": "norcet", "semester": 0, "icon": "🌐", "color": "#22d3ee",
+      "topics": ["National Health Programmes", "Biostatistics Formulas", "Epidemiology Basics", "Health Education Methods", "Research Design Basics", "Sampling & Data Interpretation"]
+    },
+    {
+      "id": "sub-nor-ment", "code": "NORMENT", "name": "NORCET – Mental Health & Ethics", "group": "norcet", "semester": 0, "icon": "🧘", "color": "#a78bfa",
+      "topics": ["Psychiatric Emergencies", "Anxiety & Depression", "Schizophrenia & Bipolar", "Substance Abuse", "Counselling Techniques", "Nursing Ethics & Laws"]
+    }
+  ]
+}
