@@ -1,4 +1,3 @@
-import SecurityPanel from '@/components/security-panel';
 'use client';
 
 import { useState } from 'react';
@@ -6,6 +5,7 @@ import { AlarmClock, BellRing, BookOpenCheck, Cloud, CloudOff, RotateCcw, Volume
 import { localDate } from '@/lib/dates';
 import { makeInitialState } from '@/lib/seed';
 import { useStore } from '@/lib/store';
+import SecurityPanel from '@/components/security-panel';
 
 const DAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
