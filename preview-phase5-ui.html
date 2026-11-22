@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Phase 5 UI preview — Login + Security Panel</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; padding: 34px 16px 60px;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #e8ecf6;
+    background: radial-gradient(1200px 600px at 20% -10%, #101a2e 0%, #07070c 55%, #050509 100%);
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  .head { text-align: center; margin-bottom: 26px; }
+  .head h1 { margin: 0 0 6px; font-size: 20px; letter-spacing: -0.01em; }
+  .head p { margin: 0; font-size: 12.5px; color: #8290a6; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 26px; }
+  @media (min-width: 900px) { .grid { grid-template-columns: 420px 1fr; align-items: start; } }
+  .label { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: #64748b; margin: 0 0 8px 4px; }
+
+  /* card shell */
+  .card {
+    position: relative; padding: 26px 22px 20px; border-radius: 22px;
+    background: linear-gradient(180deg, rgba(20,24,38,.92), rgba(11,13,22,.94));
+    border: 1px solid rgba(120,140,180,.20);
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .badge { display: inline-block; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 999px; color: #7dd3fc;
+    background: rgba(56,189,248,.10); border: 1px solid rgba(56,189,248,.28); }
+  .card h2 { margin: 14px 0 6px; font-size: 25px; letter-spacing: -.02em; }
+  .card .sub { margin: 0 0 18px; font-size: 13px; line-height: 1.55; color: #94a3b8; }
+
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 5px; border-radius: 14px;
+    background: rgba(255,255,255,.04); border: 1px solid rgba(120,140,180,.16); margin-bottom: 16px; }
+  .tab { display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 8px;
+    font-size: 12.5px; font-weight: 600; color: #94a3b8; background: transparent; border: 1px solid transparent;
+    border-radius: 10px; cursor: pointer; font-family: inherit; }
+  .tab.active { color: #eaf6ff; background: linear-gradient(180deg, rgba(34,211,238,.20), rgba(168,85,247,.16));
+    border-color: rgba(34,211,238,.40); box-shadow: 0 8px 24px -14px rgba(34,211,238,.9); }
+
+  .fld { margin-bottom: 8px; }
+  .fld label { display: block; font-size: 11.5px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
+  .inp { width: 100%; padding: 12px 13px; font-size: 13.5px; color: #eef4ff; font-family: inherit;
+    background: rgba(8,10,18,.85); border: 1px solid rgba(120,140,180,.28); border-radius: 12px; outline: none; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .4px; }
+  .hint { margin: 6px 0 12px; font-size: 11px; line-height: 1.5; color: #7c889c; }
+  .btn { width: 100%; padding: 12.5px 16px; font-size: 13.5px; font-weight: 700; font-family: inherit;
+    color: #04121a; background: linear-gradient(135deg, #22d3ee, #a855f7); border: none; border-radius: 12px;
+    cursor: pointer; box-shadow: 0 18px 40px -20px rgba(34,211,238,.9); }
+  .foot { margin: 14px 0 0; font-size: 10.5px; text-align: center; color: #64748b; line-height: 1.6; }
+  .err { margin-bottom: 10px; padding: 9px 11px; font-size: 12px; color: #fecdd3;
+    background: rgba(244,63,94,.10); border: 1px solid rgba(244,63,94,.32); border-radius: 11px; display: none; }
+  .err.show { display: block; }
+
+  /* security panel */
+  .panel { border: 1px solid rgba(120,140,180,.20); border-radius: 18px; padding: 18px 16px; display: grid; gap: 14px;
+    background: linear-gradient(180deg, rgba(20,24,38,.72), rgba(11,13,22,.82)); }
+  .phead { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .phead h3 { margin: 0; font-size: 16.5px; }
+  .phead p { margin: 4px 0 0; font-size: 11.5px; color: #94a3b8; }
+  .pill { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; padding: 4px 9px; border-radius: 999px;
+    color: #7dd3fc; background: rgba(56,189,248,.10); border: 1px solid rgba(56,189,248,.28); white-space: nowrap; }
+  .block { display: grid; gap: 8px; padding: 13px 12px; border-radius: 14px;
+    background: rgba(255,255,255,.03); border: 1px solid rgba(120,140,180,.14); }
+  .bhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .bhead h4 { margin: 0; font-size: 13px; }
+  .tag { font-size: 9.5px; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+  .on { color: #86efac; background: rgba(34,197,94,.10); border: 1px solid rgba(34,197,94,.30); }
+  .off { color: #fca5a5; background: rgba(244,63,94,.10); border: 1px solid rgba(244,63,94,.28); }
+  .note { margin: 0; font-size: 11px; line-height: 1.6; color: #8b97ab; }
+  .tokenbox { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 11px;
+    background: rgba(8,10,18,.9); border: 1px dashed rgba(34,211,238,.35); }
+  .tokenbox code { flex: 1; font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #a5f3fc; word-break: break-all; }
+  .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .sm { padding: 6px 10px; font-size: 10.5px; font-weight: 600; color: #a5f3fc; background: rgba(34,211,238,.10);
+    border: 1px solid rgba(34,211,238,.30); border-radius: 8px; cursor: pointer; font-family: inherit; }
+  .prim { padding: 9px 13px; font-size: 12px; font-weight: 700; color: #04121a; font-family: inherit;
+    background: linear-gradient(135deg, #22d3ee, #a855f7); border: none; border-radius: 10px; cursor: pointer; }
+  .ghost { padding: 8px 12px; font-size: 11.5px; font-weight: 600; color: #cbd5e1; font-family: inherit;
+    background: transparent; border: 1px solid rgba(120,140,180,.30); border-radius: 10px; cursor: pointer; }
+  .danger { padding: 8px 13px; font-size: 11.5px; font-weight: 700; color: #fecdd3; font-family: inherit;
+    background: rgba(244,63,94,.10); border: 1px solid rgba(244,63,94,.30); border-radius: 10px; cursor: pointer; }
+  .stamp { font-size: 10px; color: #64748b; }
+  .okmsg { padding: 9px 11px; font-size: 11.5px; color: #bbf7d0; background: rgba(34,197,94,.10);
+    border: 1px solid rgba(34,197,94,.30); border-radius: 10px; display: none; }
+  .okmsg.show { display: block; }
+  .note-demo { max-width: 420px; font-size: 11px; color: #64748b; text-align: center; margin: 10px auto 0; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>Phase 5 · Login Protection — UI preview</h1>
+    <p>Ye sirf design preview hai (buttons demo hain). Asli app me ye Next.js components hain.</p>
+  </div>
+
+  <div class="grid">
+    <!-- ============ LOGIN ============ -->
+    <div>
+      <p class="label">/login</p>
+      <div class="card">
+        <span class="badge">Phase 5 · Login Protection</span>
+        <h2>Ruk ja bhai 🛑</h2>
+        <p class="sub">Pehle login kar. Session 24 ghante chalega — uske baad dobara yahi screen aayegi.</p>
+
+        <div class="tabs" role="tablist">
+          <button class="tab active" id="tab-token" onclick="setMode('token')" role="tab">🔑 Token se Login</button>
+          <button class="tab" id="tab-password" onclick="setMode('password')" role="tab">🔒 Password se Login</button>
+        </div>
+
+        <div class="err" id="err">Galat ya purana token. (demo)</div>
+
+        <div id="pane-token">
+          <div class="fld">
+            <label for="tok">Dynamic token</label>
+            <input id="tok" class="inp mono" value="nst_9493ea4238129f9975002c7123fe4011f39f3546" spellcheck="false" />
+          </div>
+          <p class="hint">Naya token banate hi purana wala automatically invalid ho jaata hai.</p>
+        </div>
+
+        <div id="pane-password" style="display:none">
+          <div class="fld">
+            <label for="pw">Password</label>
+            <input id="pw" class="inp" type="password" placeholder="Tera permanent password" />
+          </div>
+          <p class="hint">Password bhool gaya? Token se login kar, phir Settings me naya password set kar.</p>
+        </div>
+
+        <button class="btn" onclick="document.getElementById('err').classList.add('show')">
+          <span id="btnlabel">Token se andar jao →</span>
+        </button>
+        <p class="foot">HTTP-Only cookie · 24 hour session · bcrypt hashed password</p>
+      </div>
+      <p class="note-demo">Middleware: bina valid session har route → <code>/login?next=…</code></p>
+    </div>
+
+    <!-- ============ SECURITY PANEL ============ -->
+    <div>
+      <p class="label">/settings → Security (Phase 5)</p>
+      <div class="panel">
+        <div class="phead">
+          <div>
+            <h3>🔐 Security (Phase 5)</h3>
+            <p>Login protection — dynamic token, bcrypt password, 24-hour session.</p>
+          </div>
+          <span class="pill">protected</span>
+        </div>
+
+        <div class="okmsg" id="okmsg">Naya token ban gaya — purana token ab invalid hai. (demo)</div>
+
+        <div class="block">
+          <div class="bhead">
+            <h4>🎫 Dynamic Login Token</h4>
+            <span class="tag on">token active</span>
+          </div>
+          <p class="note">Naya token banate hi purana token turant invalid ho jaata hai. Token se login karne ke liye <code>/login</code> → “Token se Login” tab.</p>
+          <div class="tokenbox">
+            <code>nst_9493ea4238129f9975002c7123fe4011f39f3546</code>
+            <button class="sm">Copy</button>
+          </div>
+          <div class="row">
+            <button class="prim" onclick="document.getElementById('okmsg').classList.add('show')">🔄 Naya token generate karo</button>
+            <button class="ghost">Hide token</button>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="bhead">
+            <h4>🔒 Permanent Password</h4>
+            <span class="tag on">password set</span>
+          </div>
+          <p class="note">bcryptjs (cost 11) se hash hoke DB me jaata hai — plain password kahin store nahi hota.</p>
+          <input class="inp" type="password" placeholder="Naya password (min 8)" style="margin-bottom:8px" />
+          <input class="inp" type="password" placeholder="Confirm password" style="margin-bottom:8px" />
+          <input class="inp" type="password" placeholder="Purana password (verify ke liye)" style="margin-bottom:8px" />
+          <label style="display:flex;align-items:center;gap:7px;font-size:11px;color:#94a3b8;margin-bottom:8px">
+            <input type="checkbox" /> Password dikhao
+          </label>
+          <button class="prim">Password update karo</button>
+        </div>
+
+        <div class="block">
+          <div class="bhead">
+            <h4>⏱️ Session</h4>
+            <span class="tag on">24 hours</span>
+          </div>
+          <p class="note">HTTP-Only + Secure cookie. 24 ghante baad expire — phir se login karna padega. Password ya token badalne par baaki devices ke session bhi invalid ho jaate hain.</p>
+          <div class="row">
+            <button class="danger">🚪 Logout</button>
+            <span class="stamp">last change: 22/11/2026, 3:21:13 am</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setMode(m) {
+    var token = m === 'token';
+    document.getElementById('tab-token').classList.toggle('active', token);
+    document.getElementById('tab-password').classList.toggle('active', !token);
+    document.getElementById('pane-token').style.display = token ? 'block' : 'none';
+    document.getElementById('pane-password').style.display = token ? 'none' : 'block';
+    document.getElementById('btnlabel').textContent = token ? 'Token se andar jao →' : 'Password se andar jao →';
+    document.getElementById('err').classList.remove('show');
+  }
+</script>
+</body>
+</html>

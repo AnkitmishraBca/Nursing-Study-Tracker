@@ -1,0 +1,16 @@
+{
+  "_comment": "PHASE 5 — sirf ITNE packages add karne hain. Apna pura package.json mat replace kar.",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jose": "^5.9.6",
+    "pg": "^8.11.5"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/pg": "^8.11.6"
+  },
+  "_why_not_jsonwebtoken": "jsonwebtoken Edge Runtime (middleware) me crash karta hai kyunki wo Node ka crypto module maangta hai. jose same HS256 JWT deta hai aur Edge + Node dono par chalta hai. Agar tu jsonwebtoken bhi rakhna chahta hai to rakh sakta hai — par middleware me jose hi use hoga.",
+  "scripts_optional": {
+    "db:phase5": "psql \"$DATABASE_URL\" -f sql/06_phase5.sql"
+  }
+}
