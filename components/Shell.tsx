@@ -13,10 +13,12 @@ import {
   HeartPulse,
   LayoutDashboard,
   LockKeyhole,
+  MessageCircleQuestion,
   Pause,
   PieChart,
   Play,
   Settings2,
+  Siren,
   Sparkles,
   StickyNote,
   Volume2,
@@ -34,6 +36,8 @@ const NAV = [
   { href: '/progress', label: 'Progress', icon: PieChart },
   { href: '/notes', label: 'Brain Dump', icon: StickyNote },
   { href: '/ai-notes', label: 'AI Notes', icon: Sparkles },
+  { href: '/doubt-solver', label: 'Doubt Solver', icon: MessageCircleQuestion },
+  { href: '/panic-revision', label: '5-Min Panic', icon: Siren },
   { href: '/health', label: 'Health & Mood', icon: HeartPulse },
   { href: '/settings', label: 'Settings', icon: Settings2 },
 ];
@@ -214,7 +218,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
 
       <footer className="border-t border-white/[0.07] py-5 text-center">
         <span className="watermark text-2xl font-bold tracking-wide sm:text-3xl">Made by 💖 Ankit</span>
-        <div className="mt-1 text-[10px] uppercase tracking-[0.25em] text-slate-600">Phase 2 • AI study tracker</div>
+        <div className="mt-1 text-[10px] uppercase tracking-[0.25em] text-slate-600">Phase 3 • AI study tracker</div>
       </footer>
 
       <FocusOverlay />

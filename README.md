@@ -1,10 +1,12 @@
-# BSc Nursing & NORCET Study Tracker — Phase 1 + Phase 2
+# BSc Nursing & NORCET Study Tracker — Phase 1 + Phase 2 + Phase 3
 
 Pure **naya project**. Purane code ko touch nahi kiya gaya hai. Stack: **Next.js (App Router) + Tailwind CSS + Supabase (PostgreSQL) + Drizzle ORM** (`prepare: false` with the Supabase transaction pooler).
 
 Bina kisi database ke bhi app chal jata hai (localStorage demo mode). Supabase connect karne par poora data cloud me sync hota hai.
 
-**Phase 2** me AI Short Note Maker add hua hai (Gemini + multi-AI fallback chain) — poora Phase 1 code as-is chal raha hai, sirf naye files add hue hain.
+**Phase 2** — AI Short Note Maker (Gemini + multi-AI fallback chain).
+**Phase 3** — AI Doubt Solver + 5-Minute Panic Revision + hardened fallback chain.
+Phase 1 ka poora code as-is chal raha hai; har phase me sirf naye files add hue hain.
 
 ---
 
@@ -17,6 +19,7 @@ Bina kisi database ke bhi app chal jata hai (localStorage demo mode). Supabase c
 5. [Project structure](#5-project-structure)
 6. [Important notes](#6-important-notes)
 7. [Phase 2 — AI Short Note Maker](#7-phase-2--ai-short-note-maker)
+8. [Phase 3 — Doubt Solver + Panic Revision](#8-phase-3--doubt-solver--panic-revision)
 
 ---
 
@@ -102,15 +105,21 @@ Drizzle schema unhi ka mirror hai: `db/schema.ts`. Snapshot API: `app/api/state/
 
 **Phase 2** me ek naya table add hua hai: `ai_notes` (AI Short Note Maker ki saved library) — SQL `sql/03_ai_notes.sql`, Drizzle mirror `db/schema.ts` → `aiNotes`, API `app/api/ai-notes/route.ts`.
 
+**Phase 3** me 2 naye tables: `ai_doubts` (doubt history) aur `ai_panic_sessions` (panic sheets) — SQL `sql/04_phase3.sql`, Drizzle mirror `db/schema.ts` → `aiDoubts`, `aiPanicSessions`, API `app/api/doubts/route.ts` aur `app/api/panic-sessions/route.ts`.
+
 ## 5. Project structure
 
 ```text
 nursing-study-tracker/
 ├── app/
 │   ├── api/state/route.ts      # Supabase snapshot load/save
-│   ├── api/ai/route.ts         # Phase 2 — AI Short Note Maker (Gemini + fallback)
+│   ├── api/ai/route.ts         # Phase 2/3 — AI engine (Gemini -> DeepSeek -> Groq)
 │   ├── api/ai-notes/route.ts   # Phase 2 — saved AI notes library (CRUD)
+│   ├── api/doubts/route.ts     # Phase 3 — doubt history (CRUD)
+│   ├── api/panic-sessions/route.ts  # Phase 3 — panic sheets (CRUD)
 │   ├── ai-notes/page.tsx       # Phase 2 — AI Short Note Maker UI
+│   ├── doubt-solver/page.tsx   # Phase 3 — AI Doubt Solver (chat)
+│   ├── panic-revision/page.tsx # Phase 3 — 5-Min Panic Revision
 │   ├── calendar/page.tsx
 │   ├── health/page.tsx
 │   ├── notes/page.tsx
@@ -130,7 +139,7 @@ nursing-study-tracker/
 │   ├── client.ts               # postgres(url, { prepare: false })
 │   └── schema.ts               # Drizzle ORM schema
 ├── lib/
-│   ├── ai.ts                   # Phase 2 — provider chain, prompts, output parser
+│   ├── ai.ts                   # Phase 2/3 — provider chain, prompts, output parser
 │   ├── audio.ts                # Web Audio chime + loud siren
 │   ├── dates.ts
 │   ├── seed-data.json          # 24 subjects / 155 topics — single source of truth
@@ -142,7 +151,8 @@ nursing-study-tracker/
 ├── sql/
 │   ├── 01_schema.sql
 │   ├── 02_seed.sql             # auto-generated
-│   └── 03_ai_notes.sql         # Phase 2 — ai_notes table
+│   ├── 03_ai_notes.sql         # Phase 2 — ai_notes table
+│   └── 04_phase3.sql           # Phase 3 — ai_doubts + ai_panic_sessions
 ├── .env.example
 ├── drizzle.config.ts
 └── tailwind.config.ts
@@ -150,7 +160,7 @@ nursing-study-tracker/
 
 ## 6. Important notes
 
-- AI features (Phase 2) ab available hain — dekh do section 7. Adaptive planning / Phase 3 abhi bhi pending hai.
+- AI features (Phase 2 + Phase 3) ab available hain — sections 7 aur 8 dekho.
 - Mock tests Phase 1 me simple manual score tracker hain.
 - Local mode me data sirf us browser me rehta hai. Cloud mode me same browser ka data Supabase par chala jata hai.
 - Alarm Web Audio API se banta hai — koi mp3 file/download nahi chahiye.
@@ -225,3 +235,73 @@ create table if not exists ai_notes (
 ```
 
 Poora SQL (index + RLS + grants + trigger) `sql/03_ai_notes.sql` me hai. Table na bani ho to app crash nahi hota — AI notes localStorage me save hoti hain.
+
+---
+
+## 8. Phase 3 — Doubt Solver + Panic Revision
+
+### 8.1 AI Doubt Solver — `/doubt-solver`
+
+Chat style doubt clearing. Har jawab is format me aata hai:
+
+- **SHORT ANSWER** — seedha jawab, pehli line
+- **EXPLANATION** — chhote bullets
+- **MEMORY TRICK** — mnemonic/association
+- **EXAM ANGLE** — NORCET me kaise puchte hain
+
+Features: multi-turn chat (last 10 turns AI ko jate hain), English/Hinglish toggle, suggestion chips, answer copy, Brain Dump me save, doubt history (cloud + localStorage fallback), clear chat.
+
+### 8.2 5-Minute Panic Revision — `/panic-revision`
+
+Group → Subject select karo → AI ek **5-minute high-yield sheet** banata hai. Uske andar exactly 5 sections hote hain:
+
+1. **TOP 10 MUST-KNOW FACTS**
+2. **NORMAL VALUES CHEAT SHEET** (`Hemoglobin | 12-16 g/dL`)
+3. **DRUG DOSES - RAPID FIRE** (`Adrenaline | 0.5 mL IM | anaphylaxis`)
+4. **MNEMONICS & MEMORY TRICKS**
+5. **EXAM TRAPS & FREQUENTLY ASKED**
+
+Saath me built-in **5:00 countdown timer** (start/pause/reset), sheet ka `.md` download, copy all, saved-sheets history, aur "extra focus" textbox (e.g. "drug doses pe focus").
+
+AI ko subject ke **actual syllabus topics + unka status** jata hai (store se), to high-yield selection app ke apne data se aata hai — hard-coded list nahi.
+
+### 8.3 Hardened multi-AI fallback
+
+`lib/ai.ts` me chain: **Gemini → DeepSeek → Groq**.
+
+- Gemini fail (429 quota / 5xx / network) → **ek retry with backoff** → phir bhi fail → DeepSeek → Groq.
+- Har provider ki apni 1 retry hai (transient errors ke liye), phir chain aage badhta hai.
+- Response me `provider`, `model`, `attempts[]` (har try ka reason) aur `usedFallback` aata hai — UI par "fallback" badge dikhta hai.
+- Missing key wala provider skip ho jata hai — chain sirf configured providers me chalti hai.
+
+### 8.4 New database tables (Phase 3)
+
+`sql/04_phase3.sql` — sirf **2 naye tables**, Phase 1/2 schema bilkul nahi chheda:
+
+```sql
+create table if not exists ai_doubts (
+  id text primary key,
+  user_id text not null default 'me',
+  question text not null,
+  answer text not null default '',
+  provider text,
+  model text,
+  language text not null default 'en',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists ai_panic_sessions (
+  id text primary key,
+  user_id text not null default 'me',
+  subject_id text,
+  subject_name text not null default '',
+  content text not null default '',
+  provider text,
+  model text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+```
+
+Index + `updated_at` trigger + RLS (`user_id = 'me'`) + grants poora SQL file me hai. Tables na bani ho to app crash nahi hota — history localStorage me chali jati hai.

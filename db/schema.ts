@@ -190,5 +190,39 @@ export const aiNotes = pgTable(
   (t) => [index('ai_notes_created_idx').on(t.createdAt)],
 );
 
+/** Phase 3 — AI Doubt Solver chat history. */
+export const aiDoubts = pgTable(
+  'ai_doubts',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull().default('me'),
+    question: text('question').notNull(),
+    answer: text('answer').notNull().default(''),
+    provider: text('provider'),
+    model: text('model'),
+    language: text('language').notNull().default('en'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: now,
+  },
+  (t) => [index('ai_doubts_created_idx').on(t.createdAt)],
+);
+
+/** Phase 3 — 5-minute panic revision sheets. */
+export const aiPanicSessions = pgTable(
+  'ai_panic_sessions',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull().default('me'),
+    subjectId: text('subject_id'),
+    subjectName: text('subject_name').notNull().default(''),
+    content: text('content').notNull().default(''),
+    provider: text('provider'),
+    model: text('model'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: now,
+  },
+  (t) => [index('ai_panic_created_idx').on(t.createdAt)],
+);
+
 export const subjectRelations = relations(subjects, ({ many }) => ({ topics: many(topics) }));
 export const topicRelations = relations(topics, ({ one }) => ({ subject: one(subjects, { fields: [topics.subjectId], references: [subjects.id] }) }));

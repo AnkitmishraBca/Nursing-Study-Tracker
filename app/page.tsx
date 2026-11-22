@@ -5,9 +5,11 @@ import {
   ArrowRight,
   BookOpen,
   CalendarDays,
+  MessageCircleQuestion,
   PieChart,
   HeartPulse,
   Play,
+  Siren,
   StickyNote,
   Target,
 } from 'lucide-react';
@@ -22,6 +24,8 @@ const QUICK_LINKS = [
   { href: '/calendar', label: 'Calendar marks', icon: CalendarDays, color: 'text-sun' },
   { href: '/progress', label: 'Progress graph', icon: PieChart, color: 'text-violet' },
   { href: '/notes', label: 'Brain dump', icon: StickyNote, color: 'text-cyan-300' },
+  { href: '/doubt-solver', label: 'Ask a doubt', icon: MessageCircleQuestion, color: 'text-violet' },
+  { href: '/panic-revision', label: '5-min panic revision', icon: Siren, color: 'text-coral' },
   { href: '/health', label: 'Health & mood', icon: HeartPulse, color: 'text-coral' },
 ];
 
@@ -40,7 +44,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <div className="mb-1 text-xs font-bold uppercase tracking-[0.25em] text-mint">Phase 1 • control room</div>
+          <div className="mb-1 text-xs font-bold uppercase tracking-[0.25em] text-mint">Phase 3 • control room</div>
           <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             Kaise ho bhai? <span className="text-slate-500">Aaj ka target: backlog thoda kam.</span>
           </h1>

@@ -20,7 +20,7 @@ type AiMode = 'short-notes' | 'key-points' | 'one-liner' | 'mcq';
 type AiLanguage = 'en' | 'hinglish';
 
 interface AiNoteLine {
-  type: 'heading' | 'bullet';
+  type: 'heading' | 'bullet' | 'paragraph';
   text: string;
 }
 
@@ -409,6 +409,10 @@ export default function AiNotesPage() {
                     <div key={index} className="mt-3 text-xs font-black uppercase tracking-[0.2em] text-mint">
                       {line.text}
                     </div>
+                  ) : line.type === 'paragraph' ? (
+                    <p key={index} className="text-sm leading-relaxed text-slate-200">
+                      {renderInline(line.text)}
+                    </p>
                   ) : (
                     <div
                       key={index}
