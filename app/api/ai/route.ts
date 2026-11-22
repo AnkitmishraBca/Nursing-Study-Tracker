@@ -49,9 +49,9 @@ export async function POST(request: Request) {
   const language = body.language === 'hinglish' ? 'hinglish' : 'en';
   const text = typeof body.text === 'string' ? body.text.trim() : '';
 
-  // Panic revision gets its content from the app (subject + syllabus topics),
+  // Panic revision + quiz get their content from the app (subject + syllabus topics),
   // doubt solver needs the question text — every other mode needs source text.
-  if (mode === 'panic-revision') {
+  if (mode === 'panic-revision' || mode === 'quiz') {
     if (!body.context?.subject?.trim()) {
       return NextResponse.json({ error: 'Subject chahiye — pehle subject select karo.' }, { status: 400 });
     }
@@ -92,6 +92,7 @@ export async function POST(request: Request) {
       notes: result.notes,
       lines: result.lines,
       sections: result.sections,
+      questions: result.questions,
       raw: result.raw,
       provider: result.provider,
       providerLabel: result.providerLabel,

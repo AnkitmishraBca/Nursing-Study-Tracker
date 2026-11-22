@@ -25,7 +25,8 @@ export type AiMode =
   | 'one-liner'
   | 'mcq'
   | 'doubt-solver'
-  | 'panic-revision';
+  | 'panic-revision'
+  | 'quiz';
 
 export type AiLanguage = 'en' | 'hinglish';
 
@@ -36,7 +37,22 @@ export const AI_MODES: AiMode[] = [
   'mcq',
   'doubt-solver',
   'panic-revision',
+  'quiz',
 ];
+
+export interface AiQuizOption {
+  label: string;
+  text: string;
+}
+
+export interface AiQuizQuestion {
+  id: string;
+  question: string;
+  options: AiQuizOption[];
+  correct: string;
+  explanation: string;
+  topic?: string;
+}
 
 export interface AiNoteLine {
   type: 'heading' | 'bullet' | 'paragraph';
@@ -57,6 +73,7 @@ export interface AiContext {
   subject?: string;
   topics?: { title: string; status?: string }[];
   extra?: string;
+  count?: number;
 }
 
 export interface AiProviderStatus {
@@ -76,6 +93,7 @@ export interface AiResult {
   lines: AiNoteLine[];
   notes: string[];
   sections: AiSection[];
+  questions: AiQuizQuestion[];
   raw: string;
   provider: string;
   providerLabel: string;
@@ -332,6 +350,25 @@ function toneRule(language: AiLanguage): string {
 }
 
 export function buildSystemPrompt(mode: AiMode, language: AiLanguage): string {
+  if (mode === 'quiz') {
+    return [
+      'You are a BSc Nursing & NORCET exam question generator.',
+      'You ALWAYS reply with ONE raw JSON object and nothing else. No markdown, no code fence, no commentary.',
+      'Shape: { "questions": [ { "question": string, "options": string[], "correct": number, "explanation": string, "topic": string } ] }',
+      'Rules:',
+      '- "options" must have exactly 4 strings (A, B, C, D order).',
+      '- "correct" is the 0-based index of the right option.',
+      '- "explanation" is one short line (max 22 words) telling why that answer is right.',
+      '- "topic" is the syllabus topic the question came from.',
+      '- Questions must be exam-realistic and unambiguous — only one correct option.',
+      '- Cover a mix of normal values, drug doses, nursing procedure steps, complications and mnemonics.',
+      '- Never invent false facts. If unsure, keep the question out of the set.',
+      language === 'hinglish'
+        ? '- Write the question and explanation in simple Hinglish (Roman script) with standard medical English terms.'
+        : '- Write the question and explanation in clear simple English with standard medical terms.',
+    ].join('\n');
+  }
+
   if (mode === 'doubt-solver') {
     return [
       'You are a BSc Nursing & NORCET doubt solver — a strict senior nursing tutor.',
@@ -403,6 +440,25 @@ export function buildUserPrompt(input: {
   topic?: string;
   context?: AiContext;
 }): string {
+  if (input.mode === 'quiz') {
+    const context = input.context ?? {};
+    const subject = context.subject?.trim() || 'General Nursing';
+    const count = Math.min(Math.max(context.count ?? 10, 3), 20);
+    const topicLines = (context.topics ?? [])
+      .slice(0, 40)
+      .map((t) => `- ${t.title}`)
+      .join('\n');
+
+    return [
+      `Subject: ${subject}`,
+      topicLines ? `Syllabus topics:\n${topicLines}` : 'Syllabus topics: (not provided - use core nursing topics)',
+      context.extra?.trim() ? `Extra focus: ${context.extra.trim()}` : '',
+      `Generate exactly ${count} MCQs from these topics. Reply with the JSON object only.`,
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+  }
+
   if (input.mode === 'panic-revision') {
     const context = input.context ?? {};
     const subject = context.subject?.trim() || 'General Nursing';
@@ -503,6 +559,55 @@ export function groupIntoSections(lines: AiNoteLine[]): AiSection[] {
   return sections.filter((section) => section.bullets.length > 0 || section.heading);
 }
 
+/** Extracts the first JSON object from a model reply (handles ```json fences). */
+function extractJson(raw: string): unknown {
+  const cleaned = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  if (start === -1 || end === -1 || end <= start) throw new Error('Model ne JSON nahi diya');
+  return JSON.parse(cleaned.slice(start, end + 1));
+}
+
+/** Turns the model JSON into clean quiz questions (4 options, correct index, explanation). */
+export function parseQuiz(raw: string): AiQuizQuestion[] {
+  const data = extractJson(raw) as {
+    questions?: {
+      question?: string;
+      options?: string[];
+      correct?: number | string;
+      explanation?: string;
+      topic?: string;
+    }[];
+  };
+
+  const list = Array.isArray(data?.questions) ? data.questions : [];
+  const questions: AiQuizQuestion[] = [];
+
+  list.forEach((item, index) => {
+    const question = String(item?.question ?? '').trim();
+    const options = (item?.options ?? []).map((o) => String(o).trim()).filter(Boolean);
+    if (!question || options.length < 2) return;
+
+    let correctIndex = typeof item?.correct === 'number' ? item.correct : Number(item?.correct ?? -1);
+    if (Number.isNaN(correctIndex) || correctIndex < 0) {
+      correctIndex = 0;
+    }
+    if (correctIndex > options.length - 1) correctIndex = 0;
+
+    const labels = ['A', 'B', 'C', 'D', 'E', 'F'];
+    questions.push({
+      id: `q${index + 1}-${Math.random().toString(36).slice(2, 7)}`,
+      question,
+      options: options.map((text, i) => ({ label: labels[i] ?? String(i + 1), text })),
+      correct: labels[correctIndex] ?? 'A',
+      explanation: String(item?.explanation ?? '').trim(),
+      topic: item?.topic ? String(item.topic).trim() : undefined,
+    });
+  });
+
+  return questions;
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Public entry point                                                         */
 /* -------------------------------------------------------------------------- */
@@ -523,6 +628,10 @@ export async function generateWithFallback(input: {
   if (mode === 'panic-revision') {
     if (!input.context?.subject?.trim()) {
       throw new AiError('Panic revision ke liye subject chahiye.', 'bad_input');
+    }
+  } else if (mode === 'quiz') {
+    if (!input.context?.subject?.trim()) {
+      throw new AiError('Quiz ke liye subject chahiye.', 'bad_input');
     }
   } else if (!text) {
     throw new AiError('Text ya topic khaali hai.', 'bad_input');
@@ -552,10 +661,15 @@ export async function generateWithFallback(input: {
         const result = await provider.run(system, prompt, history);
         attempts.push({ provider: provider.id, ok: true });
         const lines = parseNotes(result.text);
+        const questions = mode === 'quiz' ? parseQuiz(result.text) : [];
+        if (mode === 'quiz' && questions.length === 0) {
+          throw new Error('Model ne valid MCQs nahi diye');
+        }
         return {
           lines,
           notes: lines.filter((l) => l.type !== 'heading').map((l) => l.text),
           sections: groupIntoSections(lines),
+          questions,
           raw: result.text,
           provider: provider.id,
           providerLabel: provider.label,

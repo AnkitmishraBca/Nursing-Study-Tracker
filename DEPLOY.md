@@ -13,7 +13,10 @@
    2. `sql/02_seed.sql` (24 subjects / 155 topics)
    3. `sql/03_ai_notes.sql` (Phase 2 — `ai_notes` table)
    4. `sql/04_phase3.sql` (Phase 3 — `ai_doubts` + `ai_panic_sessions` tables)
+   5. `sql/05_phase4.sql` (Phase 4 — `quiz_attempts` + `voice_notes` tables)
 5. Deploy. Build locally bhi verified hai (`npm run typecheck && npm run build`).
+
+**Apna logo:** `public/logo.png` ko apne logo se replace kar do (square PNG, 512×512 best). Wahi file favicon, sidebar logo aur PWA app icon ban jayegi — koi aur change nahi.
 
 Notes:
 - `.env.local` ZIP me nahi hai (sirf `.env.example`) — secrets kabhi commit mat karna.
@@ -23,3 +26,6 @@ Notes:
 - `GEMINI_API_KEY` bina app poora chalta hai — sirf AI pages error dikhate hain. Fallback providers (`DEEPSEEK_API_KEY`, `GROQ_API_KEY`) optional hain; key milte hi chain me aa jate hain (Gemini → DeepSeek → Groq).
 - Naya koi npm package add nahi hua — Gemini/DeepSeek/Groq sab native `fetch` se call hote hain, isliye `package.json` unchanged hai.
 - AI tables (`ai_notes`, `ai_doubts`, `ai_panic_sessions`) ban gayi nahi to app crash nahi hota — AI history localStorage me chalti hai.
+- Phase 4 tables (`quiz_attempts`, `voice_notes`) bhi optional hain — quiz history aur voice notes tabhi cloud me jaate hain jab table bani ho, warna localStorage me chalti hain.
+- Voice note audio base64 text column me save hota hai — recording ~3 MB se chhoti rakho (UI warning bhi deta hai).
+- `jspdf` + `html2canvas` sirf PDF download par lazy-load hote hain, isliye app ka initial bundle chhota rehta hai.

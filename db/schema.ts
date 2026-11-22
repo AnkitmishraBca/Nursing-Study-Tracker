@@ -224,5 +224,38 @@ export const aiPanicSessions = pgTable(
   (t) => [index('ai_panic_created_idx').on(t.createdAt)],
 );
 
+/** Phase 4 — AI quiz attempts (score history). */
+export const quizAttempts = pgTable(
+  'quiz_attempts',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull().default('me'),
+    subjectName: text('subject_name').notNull().default('General'),
+    topic: text('topic'),
+    total: integer('total').notNull().default(0),
+    score: integer('score').notNull().default(0),
+    provider: text('provider'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: now,
+  },
+  (t) => [index('quiz_attempts_created_idx').on(t.createdAt)],
+);
+
+/** Phase 4 — voice notes (audio stored as base64 data URL). */
+export const voiceNotes = pgTable(
+  'voice_notes',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull().default('me'),
+    title: text('title').notNull().default('Voice note'),
+    durationSec: integer('duration_sec').notNull().default(0),
+    /** base64 data URL — keep recordings short (< 3 MB) so the row stays small. */
+    audioData: text('audio_data'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: now,
+  },
+  (t) => [index('voice_notes_created_idx').on(t.createdAt)],
+);
+
 export const subjectRelations = relations(subjects, ({ many }) => ({ topics: many(topics) }));
 export const topicRelations = relations(topics, ({ one }) => ({ subject: one(subjects, { fields: [topics.subjectId], references: [subjects.id] }) }));

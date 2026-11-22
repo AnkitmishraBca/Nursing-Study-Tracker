@@ -9,6 +9,7 @@ import {
   PieChart,
   HeartPulse,
   Play,
+  Quote as QuoteIcon,
   Siren,
   StickyNote,
   Target,
@@ -17,6 +18,7 @@ import StatsCards from '@/components/StatsCards';
 import TimerWidget from '@/components/TimerWidget';
 import WasteWidget from '@/components/WasteWidget';
 import { localDate, timeAgo } from '@/lib/dates';
+import { quoteForDate } from '@/lib/quotes';
 import { useStore } from '@/lib/store';
 
 const QUICK_LINKS = [
@@ -39,6 +41,7 @@ export default function DashboardPage() {
 
   const recent = state.study_sessions.slice(0, 5);
   const today = localDate();
+  const quote = quoteForDate();
 
   return (
     <div className="space-y-6">
@@ -56,6 +59,24 @@ export default function DashboardPage() {
           <Target size={13} /> {state.topics.filter((t) => t.level1 === 'done').length}/{state.topics.length} topics Level 1 done
         </div>
       </div>
+
+      <section className="card relative overflow-hidden">
+        <div className="pointer-events-none absolute -right-6 -top-8 text-[130px] leading-none text-white/[0.03]">
+          &ldquo;
+        </div>
+        <div className="flex items-start gap-3">
+          <QuoteIcon size={20} className="mt-1 shrink-0 text-mint" />
+          <div className="min-w-0">
+            <div className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">
+              Aaj ka motivation
+            </div>
+            <p className="mt-1.5 text-base font-semibold leading-relaxed text-white sm:text-lg">
+              {quote.text}
+            </p>
+            <div className="mt-1.5 text-xs text-slate-500">— {quote.author}</div>
+          </div>
+        </div>
+      </section>
 
       <StatsCards />
 

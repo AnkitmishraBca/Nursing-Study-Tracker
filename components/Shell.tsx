@@ -9,11 +9,14 @@ import {
   CheckCircle2,
   Cloud,
   CloudOff,
+  FileBarChart,
   Flame,
   HeartPulse,
   LayoutDashboard,
+  ListChecks,
   LockKeyhole,
   MessageCircleQuestion,
+  Mic,
   Pause,
   PieChart,
   Play,
@@ -26,6 +29,8 @@ import {
   Zap,
 } from 'lucide-react';
 import { useEffect } from 'react';
+import Logo from '@/components/Logo';
+import RewardManager from '@/components/RewardManager';
 import { mmss } from '@/lib/dates';
 import { useStore } from '@/lib/store';
 
@@ -38,6 +43,9 @@ const NAV = [
   { href: '/ai-notes', label: 'AI Notes', icon: Sparkles },
   { href: '/doubt-solver', label: 'Doubt Solver', icon: MessageCircleQuestion },
   { href: '/panic-revision', label: '5-Min Panic', icon: Siren },
+  { href: '/quiz', label: 'AI Quiz', icon: ListChecks },
+  { href: '/voice-notes', label: 'Voice Notes', icon: Mic },
+  { href: '/report', label: 'Weekly Report', icon: FileBarChart },
   { href: '/health', label: 'Health & Mood', icon: HeartPulse },
   { href: '/settings', label: 'Settings', icon: Settings2 },
 ];
@@ -138,7 +146,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1">
         <aside className="sticky top-0 hidden h-screen w-[250px] shrink-0 flex-col border-r border-white/[0.07] bg-[#0b1020]/80 px-4 py-6 backdrop-blur-xl md:flex">
           <Link href="/" className="mb-8 flex items-center gap-3 px-2">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-mint to-violet text-xl font-black text-[#0a0d1a]">N</div>
+            <Logo size={44} rounded="rounded-2xl" />
             <div>
               <div className="text-sm font-black leading-tight text-white">Nursing Tracker</div>
               <div className="text-[10px] uppercase tracking-[0.2em] text-mint">BSc + NORCET</div>
@@ -187,8 +195,11 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-30 border-b border-white/[0.07] bg-[#0a0d1a]/90 backdrop-blur-xl md:hidden">
             <div className="flex items-center justify-between px-4 py-3">
-              <Link href="/" className="text-sm font-black text-white">
-                N<span className="text-mint">·</span>Tracker
+              <Link href="/" className="flex items-center gap-2">
+                <Logo size={30} rounded="rounded-xl" />
+                <span className="text-sm font-black text-white">
+                  N<span className="text-mint">·</span>Tracker
+                </span>
               </Link>
               <span className="chip py-1 text-[10px]">
                 <Zap size={12} className="text-sun" /> {state.stats.xp} XP
@@ -218,12 +229,13 @@ export default function Shell({ children }: { children: React.ReactNode }) {
 
       <footer className="border-t border-white/[0.07] py-5 text-center">
         <span className="watermark text-2xl font-bold tracking-wide sm:text-3xl">Made by 💖 Ankit</span>
-        <div className="mt-1 text-[10px] uppercase tracking-[0.25em] text-slate-600">Phase 3 • AI study tracker</div>
+        <div className="mt-1 text-[10px] uppercase tracking-[0.25em] text-slate-600">Phase 4 • AI study tracker</div>
       </footer>
 
       <FocusOverlay />
       <AlarmOverlay />
       <Toast />
+      <RewardManager />
     </div>
   );
 }

@@ -1,12 +1,14 @@
-# BSc Nursing & NORCET Study Tracker — Phase 1 + Phase 2 + Phase 3
+# BSc Nursing & NORCET Study Tracker — Phase 1 → Phase 4
 
 Pure **naya project**. Purane code ko touch nahi kiya gaya hai. Stack: **Next.js (App Router) + Tailwind CSS + Supabase (PostgreSQL) + Drizzle ORM** (`prepare: false` with the Supabase transaction pooler).
 
 Bina kisi database ke bhi app chal jata hai (localStorage demo mode). Supabase connect karne par poora data cloud me sync hota hai.
 
-**Phase 2** — AI Short Note Maker (Gemini + multi-AI fallback chain).
-**Phase 3** — AI Doubt Solver + 5-Minute Panic Revision + hardened fallback chain.
-Phase 1 ka poora code as-is chal raha hai; har phase me sirf naye files add hue hain.
+- **Phase 2** — AI Short Note Maker (Gemini + multi-AI fallback chain)
+- **Phase 3** — AI Doubt Solver + 5-Minute Panic Revision + hardened fallback
+- **Phase 4** — Logo + splash screen, AI Quiz Generator, Voice Notes Recorder, motivational quotes + rewards, Weekly Report Card (PDF export)
+
+Har phase me sirf naye files add hue hain — app kabhi rewrite nahi hua.
 
 ---
 
@@ -20,6 +22,7 @@ Phase 1 ka poora code as-is chal raha hai; har phase me sirf naye files add hue 
 6. [Important notes](#6-important-notes)
 7. [Phase 2 — AI Short Note Maker](#7-phase-2--ai-short-note-maker)
 8. [Phase 3 — Doubt Solver + Panic Revision](#8-phase-3--doubt-solver--panic-revision)
+9. [Phase 4 — Branding + Study Boost](#9-phase-4--branding--study-boost)
 
 ---
 
@@ -107,19 +110,27 @@ Drizzle schema unhi ka mirror hai: `db/schema.ts`. Snapshot API: `app/api/state/
 
 **Phase 3** me 2 naye tables: `ai_doubts` (doubt history) aur `ai_panic_sessions` (panic sheets) — SQL `sql/04_phase3.sql`, Drizzle mirror `db/schema.ts` → `aiDoubts`, `aiPanicSessions`, API `app/api/doubts/route.ts` aur `app/api/panic-sessions/route.ts`.
 
+**Phase 4** me 2 naye tables: `quiz_attempts` (quiz score history) aur `voice_notes` (recorded audio) — SQL `sql/05_phase4.sql`, Drizzle mirror `db/schema.ts` → `quizAttempts`, `voiceNotes`, API `app/api/quizzes/route.ts` aur `app/api/voice-notes/route.ts`.
+
 ## 5. Project structure
 
 ```text
 nursing-study-tracker/
 ├── app/
 │   ├── api/state/route.ts      # Supabase snapshot load/save
-│   ├── api/ai/route.ts         # Phase 2/3 — AI engine (Gemini -> DeepSeek -> Groq)
+│   ├── api/ai/route.ts         # Phase 2-4 — AI engine (Gemini -> DeepSeek -> Groq)
 │   ├── api/ai-notes/route.ts   # Phase 2 — saved AI notes library (CRUD)
 │   ├── api/doubts/route.ts     # Phase 3 — doubt history (CRUD)
 │   ├── api/panic-sessions/route.ts  # Phase 3 — panic sheets (CRUD)
+│   ├── api/quizzes/route.ts    # Phase 4 — quiz attempt history (CRUD)
+│   ├── api/voice-notes/route.ts # Phase 4 — voice notes (CRUD)
 │   ├── ai-notes/page.tsx       # Phase 2 — AI Short Note Maker UI
 │   ├── doubt-solver/page.tsx   # Phase 3 — AI Doubt Solver (chat)
 │   ├── panic-revision/page.tsx # Phase 3 — 5-Min Panic Revision
+│   ├── quiz/page.tsx           # Phase 4 — AI Quiz Generator
+│   ├── voice-notes/page.tsx    # Phase 4 — Voice Notes Recorder
+│   ├── report/page.tsx         # Phase 4 — Weekly Report Card (+ PDF)
+│   ├── manifest.ts             # Phase 4 — PWA manifest (logo icon)
 │   ├── calendar/page.tsx
 │   ├── health/page.tsx
 │   ├── notes/page.tsx
@@ -127,10 +138,14 @@ nursing-study-tracker/
 │   ├── settings/page.tsx
 │   ├── subjects/page.tsx
 │   ├── globals.css
-│   ├── layout.tsx              # StoreProvider + Shell + footer watermark
-│   └── page.tsx                # Dashboard
+│   ├── layout.tsx              # favicon + manifest + StoreProvider + Shell
+│   └── page.tsx                # Dashboard (+ daily quote)
 ├── components/
-│   ├── Shell.tsx               # Nav + focus lock + alarm popup + toast + watermark
+│   ├── Logo.tsx                # Phase 4 — logo with graceful fallback
+│   ├── SplashScreen.tsx        # Phase 4 — splash + "Welcome To The World Of Ankit"
+│   ├── RewardOverlay.tsx       # Phase 4 — confetti reward animation
+│   ├── RewardManager.tsx       # Phase 4 — XP boosters + streak milestones
+│   ├── Shell.tsx               # Nav + logo + focus lock + alarm + toast + watermark
 │   ├── StatsCards.tsx
 │   ├── TimerWidget.tsx
 │   ├── WasteWidget.tsx
@@ -139,20 +154,25 @@ nursing-study-tracker/
 │   ├── client.ts               # postgres(url, { prepare: false })
 │   └── schema.ts               # Drizzle ORM schema
 ├── lib/
-│   ├── ai.ts                   # Phase 2/3 — provider chain, prompts, output parser
+│   ├── ai.ts                   # Phase 2-4 — provider chain, prompts, parsers
 │   ├── audio.ts                # Web Audio chime + loud siren
 │   ├── dates.ts
+│   ├── quotes.ts               # Phase 4 — quotes, boosters, milestones
 │   ├── seed-data.json          # 24 subjects / 155 topics — single source of truth
 │   ├── seed.ts
 │   ├── stats.ts
 │   ├── store.tsx               # Timer, alarm, focus lock, persistence, sync
 │   └── types.ts
+├── public/
+│   ├── logo.png                # Phase 4 — apna logo yahan rakho
+│   └── fonts/DancingScript-latin.woff2
 ├── scripts/generate-seed.mjs
 ├── sql/
 │   ├── 01_schema.sql
 │   ├── 02_seed.sql             # auto-generated
-│   ├── 03_ai_notes.sql         # Phase 2 — ai_notes table
-│   └── 04_phase3.sql           # Phase 3 — ai_doubts + ai_panic_sessions
+│   ├── 03_ai_notes.sql         # Phase 2 — ai_notes
+│   ├── 04_phase3.sql           # Phase 3 — ai_doubts + ai_panic_sessions
+│   └── 05_phase4.sql           # Phase 4 — quiz_attempts + voice_notes
 ├── .env.example
 ├── drizzle.config.ts
 └── tailwind.config.ts
@@ -160,7 +180,7 @@ nursing-study-tracker/
 
 ## 6. Important notes
 
-- AI features (Phase 2 + Phase 3) ab available hain — sections 7 aur 8 dekho.
+- AI features (Phase 2, 3, 4) ab available hain — sections 7, 8 aur 9 dekho.
 - Mock tests Phase 1 me simple manual score tracker hain.
 - Local mode me data sirf us browser me rehta hai. Cloud mode me same browser ka data Supabase par chala jata hai.
 - Alarm Web Audio API se banta hai — koi mp3 file/download nahi chahiye.
@@ -305,3 +325,87 @@ create table if not exists ai_panic_sessions (
 ```
 
 Index + `updated_at` trigger + RLS (`user_id = 'me'`) + grants poora SQL file me hai. Tables na bani ho to app crash nahi hota — history localStorage me chali jati hai.
+
+---
+
+## 9. Phase 4 — Branding + Study Boost
+
+### 9.1 Logo + Splash Screen
+
+| Kahan | Kya |
+|---|---|
+| `public/logo.png` | **Apna logo yahan rakho** (square, PNG, 512×512 recommended). Maine ek placeholder bana diya hai — apna isse replace kar do. |
+| Splash | App load hote hi ~2.6s ke liye logo + **"Welcome To The World Of Ankit"** (Dancing Script) + loading bar |
+| Sidebar / mobile header | Logo image (file na ho to app crash nahi hota — gradient "N" tile fallback) |
+| `app/layout.tsx` | `icons.icon` + `apple` icon = `/logo.png`, `manifest: '/manifest.webmanifest'` |
+| `app/manifest.ts` | PWA manifest — phone me "Add to Home Screen" karne par logo app icon ban jayega |
+
+### 9.2 AI Quiz Generator — `/quiz`
+
+Group → Subject → (optional) Topic → **Generate 5/10/15/20 MCQs**.
+
+- AI JSON output karta hai: 4 options + correct answer index + one-line explanation + topic
+- Har question pe 4 options, instant feedback (green = sahi, coral = galat)
+- Submit → score + percentage, **har wrong answer ka explanation** review me
+- History: localStorage + Supabase (`quiz_attempts`), delete bhi ho sakta hai
+
+### 9.3 Voice Notes Recorder — `/voice-notes`
+
+- Browser **MediaRecorder API** — Start / Pause / Resume / Stop, live timer, pulsing mic
+- Title de sakte ho, recording list me **play / delete**
+- Audio base64 data URL ke roop me Supabase `voice_notes` table me save hota hai
+- Max recording size ~3 MB (text column limit) — isse lambi recording reject ho jayegi
+
+### 9.4 Motivational Quotes + Rewards
+
+- **Daily quote** — dashboard par, 15 quotes ka array (`lib/quotes.ts`), din ke hisaab se rotate hota hai (poore din same, agle din naya)
+- **Streak milestones** — 7 / 30 / 100 / 365 din par special reward overlay (confetti + "7-Day Warrior", "30-Day Streak Legend"…)
+- **XP Boosters** — har baar XP badhne par ek random booster (2x XP window, Focus Shield, Brain Boost…) with confetti animation
+
+Reward history `localStorage` me track hoti hai, taaki same milestone dobara na fire ho.
+
+### 9.5 Weekly Report Card — `/report`
+
+- Is hafte (Monday → Sunday): **total study time, XP earned, current streak, subjects covered, tasks done, full study days**
+- **Subject-wise pie chart** (weekly filtered)
+- **"Download PDF"** button — `html2canvas` se report card ka snapshot + `jsPDF` me A4 PNG → `weekly-report-YYYY-MM-DD-to-YYYY-MM-DD.pdf`
+- "Coach ka remarks" — week ke hisaab se ek line ka personalised feedback
+
+### 9.6 New database tables (Phase 4)
+
+`sql/05_phase4.sql` — sirf **2 naye tables**:
+
+```sql
+create table if not exists quiz_attempts (
+  id text primary key,
+  user_id text not null default 'me',
+  subject_name text not null default 'General',
+  topic text,
+  total integer not null default 0 check (total >= 0),
+  score integer not null default 0 check (score >= 0),
+  provider text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists voice_notes (
+  id text primary key,
+  user_id text not null default 'me',
+  title text not null default 'Voice note',
+  duration_sec integer not null default 0 check (duration_sec >= 0),
+  audio_data text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+```
+
+### 9.7 New packages (Phase 4)
+
+```bash
+npm install jspdf html2canvas
+```
+
+- `jspdf` — PDF file likhta hai
+- `html2canvas` — DOM ko PNG me convert karta hai
+
+Dono **sirf PDF download button** par lazy-import hote hain (`await import(...)`), isliye app ka initial bundle nahi badhta. Baaki AI calls native `fetch` se hain — SDK koi nahi.
