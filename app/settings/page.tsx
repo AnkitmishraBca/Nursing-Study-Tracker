@@ -1,3 +1,4 @@
+import SecurityPanel from '@/components/security-panel';
 'use client';
 
 import { useState } from 'react';
@@ -177,6 +178,7 @@ export default function SettingsPage() {
             </div>
             <p className="mt-3 text-[11px] text-slate-600">Reset sab sessions, notes, marks aur topics ke levels mita dega. Local date: {localDate()}</p>
           </section>
+          <SecurityPanel/>
         </div>
       </div>
     </div>
